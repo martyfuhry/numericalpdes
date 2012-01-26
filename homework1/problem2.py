@@ -5,13 +5,14 @@ import matplotlib.pylab as p
 import time
 
 def dudt(U, C):
-    dudt = np.concatenate((U[len(U)-2:], U, U[0:1]))
-    dudt = np.dot(C, dudt)
-    return dudt[2:len(U)+2]
+    #dudt = np.concatenate((U[len(U)-2:], U, U[0:1]))
+    dudt = np.dot(C, U)
+    #return dudt[2:len(U)+2]
+    return dudt
 
 dx = .1
 dt = dx**3
-x = np.arange(-20+dx,20,dx)
+x = np.arange(-20,20+dx,dx)
 m = len(x)
 n = int(10/dt)
 
@@ -22,12 +23,22 @@ U = np.empty((n, m))
 
 U = 20*np.exp(-x**2)
 
-A = -1*np.diag(np.ones(m+2), k=-1) + 1*np.diag(np.ones(m+2), k=1)
+A = -1*np.diag(np.ones(m-1), k=-1) + 1*np.diag(np.ones(m-1), k=1)
+A[0,m-2] = -1
+A[m-1, 1] = 1
+
 # u''' = u_j+2 - 2u_j+1 + 2uj-1 -u_j-2 / (2dx^3)
-B = -np.diag(np.ones(m+1), k=-2) \
-  +  2*np.diag(np.ones(m+2), k=-1) \
-  + -2*np.diag(np.ones(m+2), k=1)  \
-  +  np.diag(np.ones(m+1),k=2)
+B = -np.diag(np.ones(m-2), k=-2) \
+  +  2*np.diag(np.ones(m-1), k=-1) \
+  + -2*np.diag(np.ones(m-1), k=1)  \
+  +  np.diag(np.ones(m-2),k=2)
+
+B[0,m-2] = 2
+B[0,m-3] = -1
+B[1,m-2] = -1
+B[m-2,1] = 1
+B[m-1,2] = 1
+B[m-1,1] = -2
 
 A *= a/(2*dx)
 B *= beta/(2*dx**3)
