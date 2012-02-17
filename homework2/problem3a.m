@@ -36,7 +36,7 @@ for dt = [0.00004, 0.00003, 0.000015]
     for t = 1:timesteps   % loop through the timesteps
         U += mu*A*U;      % perform the FD method
         plot(x,U);        % plot the result
-        axis([a,b,0,1])
+        axis([a,b,0,1]);
         drawnow;
     endfor
     input("Press any key to continue.")

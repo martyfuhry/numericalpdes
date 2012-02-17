@@ -35,8 +35,8 @@ for dt = [0.0156, 0.00781, 0.00391, 0.00195]
 
     % define the FD matrix 
     A = diag(ones(m+1,1), 1) - diag(ones(m+1,1), -1);
-    A(1,m+2) = -1;    % with periodic 
-    A(m+2,1) = 1;     % boundary conditions
+    A(1,m+1) = -1;    % with periodic 
+    A(m+2,2) = 1;     % boundary conditions
 
     Uprev = sech(20*x - 10).^2; % and this initial condition first
 
@@ -57,6 +57,5 @@ for dt = [0.0156, 0.00781, 0.00391, 0.00195]
         drawnow;
     endfor
     input("Press any key to continue.");
-
 endfor
 

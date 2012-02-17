@@ -48,7 +48,7 @@ for dt = [0.00781, 0.00391, 0.00195]
     for t = 2:timesteps
         Utemp    = Ucurrent;
         Ucurrent(1) = 1 - cos(dt*t); % inflow
-        % absorbing boundary conditions
+        % absorbing boundary conditions (uses forward Euler; see attached)
         Ucurrent(m+2) = Uprev(m+1);
         Ucurrent = Uprev - mu*A*Ucurrent;
         Uprev    = Utemp;

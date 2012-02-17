@@ -54,7 +54,7 @@ endfor
 I = diag(ones(m,1));
 
 % loop through the different time discretizations
-for dt = [0.000004]
+for dt = [0.00004]
     C = dt/dx^2 * (A + B);
     U  = sech(200*x - 100).^2; % reset initial conditions
     for t = 1:timesteps        % loop through the timesteps
