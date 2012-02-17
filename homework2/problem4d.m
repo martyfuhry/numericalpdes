@@ -1,6 +1,6 @@
-% Problem 4 (c)
+% Problem 4 (d)
 % Marty Fuhry
-% 2/14/2011
+% 2/16/2011
 % Compiled and ran using GNU Octave, version 3.2.4 configured for "x86_64-pc-linux-gnu".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -9,12 +9,12 @@
 % on the interval 0 < x < 1 with a = 1.                                        %
 % Use leapfrog and second-order centered space differencing                    % 
 %  u_j^n+1 = u_j^n-1 - a * dt / dx (u_j+1^n - u_j-1^n)                         %
-% with m=128 grid points and the intial conditions                             %
-%  u(x, 0) = sech^2(20x - 10)                                                  %
-%  and the narrower                                                            %
-%  u(x, 0) = sech^2(40x - 20)                                                  %
-% with periodic boundary conditions                                            %
-%  u(0, t) = u(1, t).                                                          %
+% with m=128 grid points and the intial condition                              %
+%  u(x, 0) = 0                                                                 %
+% with the inflow boundary condition                                           %
+%  u(0, t) = 1 - cos(t).                                                       %
+% First proceed naively and assume the right boundary condition is             %
+%  u(1, t) = 0.                                                                %
 % Discuss what you find (see assignment paper).                                %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -29,34 +29,36 @@ dx = (b - a) / (m - 1);
 x = [a-dx:dx:b+dx]';
 
 % loop through the time values
-for dt = [0.0156, 0.00781, 0.00391, 0.00195]
-    timesteps = 1/dt; % make it loop once
+for dt = [0.00781, 0.00391, 0.00195]
+    timesteps = 20/dt; 
     mu = alpha*dt/dx; % for the FD method
 
     % define the FD matrix 
     A = diag(ones(m+1,1), 1) - diag(ones(m+1,1), -1);
-    A(1,m+2) = -1;    % with periodic 
-    A(m+2,1) = 1;     % boundary conditions
+    A(m+2, m+2) = 1;
 
-    Uprev = sech(20*x - 10).^2; % and this initial condition first
+    Uprev = 0*x;
+    Ucurrent = 0*x;
+    Ucurrent(1) = 1 - cos(dt);
 
     % use forward Euler to get first approximation
-    Ucurrent = Uprev - mu*A*Uprev;
+    %Ucurrent = Uprev - mu*A*Uprev;
+    %Ucurrent(1)   = 1 - cos(dt*t);
 
     % this is the exact initial condition
-    % which will eliminate the oscillating backwards-moving wave
-    %Ucurrent = sech(20*(x - alpha*dt) - 10).^2;
+    %Ucurrent = 
 
     % start the FD method
-    for t = 1:timesteps
+    for t = 2:timesteps
         Utemp    = Ucurrent;
+        Ucurrent(1) = 1 - cos(dt*t);
         Ucurrent = Uprev - mu*A*Ucurrent;
         Uprev    = Utemp;
-        plot(x(2:m-1),Ucurrent(2:m-1)); % and plot it
-        axis([a,b,-1,1])
-        drawnow;
+        if mod(t,10) == 0
+            plot(x(2:m-1),Ucurrent(2:m-1)); % and plot it
+            axis([a,b,-10,10])
+            drawnow;
+        endif
     endfor
     input("Press any key to continue.");
-
 endfor
-

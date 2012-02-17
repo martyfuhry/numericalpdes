@@ -53,8 +53,8 @@ for dt = [dtList]
 
     % define the FD matrix 
     A = sparse(diag(ones(m+2,1)) - diag(ones(m+1,1),-1));
-    A(1,m-1) = -1;    % with periodic 
-    A(m, 2)  = 1;     % boundary conditions
+    A(1,m) = -1;    % with periodic 
+    A(m,1)  = 1;     % boundary conditions
     U = sech(20*x - 10).^2; % and this initial condition
 
     % start the FD method

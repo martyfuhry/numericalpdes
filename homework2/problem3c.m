@@ -33,7 +33,7 @@ A = sparse(A);
 A(1,:) = [-2, 2, zeros(1,m-1)]; % need the first row to conform to Neumann boundary conditions
 
 B = zeros(m+1, 1); % boundary conditions
-I = diag(ones(m+1,1));
+I = diag(ones(m+1,1)); % identity matrix
 
 % loop through the different time discretizations
 % since the first choice is unstable, we'll only look at the third
@@ -42,7 +42,7 @@ for dt = [0.00003]
     mu = kappa * dt / (2 * dx^2);
     B(1) = mu * 4*dx;          % boundary conditions
     for t = 1:timesteps        % loop through the timesteps
-        U = (I + A.*mu)*U + B;       % perform the FD method
+        U = (I + A.*mu)*U + B; % perform the FD method
         U = (I - A.*mu)\U;
         plot(x,U);             % plot the result
         axis([a,b,0,1])
