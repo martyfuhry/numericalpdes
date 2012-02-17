@@ -31,19 +31,15 @@ x = [a-dx:dx:b+dx]';
 % loop through the time values
 for dt = [0.00781, 0.00391, 0.00195]
     timesteps = 20/dt; 
-    mu = alpha*dt/dx; % for the FD method
+    mu = alpha*dt/dx; % courant number
 
     % define the FD matrix 
     A = diag(ones(m+1,1), 1) - diag(ones(m+1,1), -1);
-    A(m+2, m+2) = 1;
 
+    % initial conditions with inflow
     Uprev = 0*x;
     Ucurrent = 0*x;
-    Ucurrent(1) = 1 - cos(dt);
-
-    % use forward Euler to get first approximation
-    %Ucurrent = Uprev - mu*A*Uprev;
-    %Ucurrent(1)   = 1 - cos(dt*t);
+    Ucurrent(1) = 1 - cos(dt); % inflow
 
     % this is the exact initial condition
     %Ucurrent = 
@@ -51,7 +47,9 @@ for dt = [0.00781, 0.00391, 0.00195]
     % start the FD method
     for t = 2:timesteps
         Utemp    = Ucurrent;
-        Ucurrent(1) = 1 - cos(dt*t);
+        Ucurrent(1) = 1 - cos(dt*t); % inflow
+        % absorbing boundary conditions
+        Ucurrent(m+2) = Uprev(m+1);
         Ucurrent = Uprev - mu*A*Ucurrent;
         Uprev    = Utemp;
         if mod(t,10) == 0
