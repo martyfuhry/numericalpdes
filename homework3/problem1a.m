@@ -10,7 +10,7 @@
 % on the interval 0 < x < 1.                                                   %
 % Use Lax Wendroff                                                             % 
 %  u_j^n+1 = u_j^n - 1/(2dx) A (u_j+1^n - u_j-1^n)                             %
-%            + dt/(2dx) A (u_j+1^n - 2u_j^n + u_j-1^n)                         %
+%            + dt^2/(dx^2) A (u_j+1^n - 2u_j^n + u_j-1^n)                      %
 % with m=128 grid points and the intial condition                              %
 %  n(x, 0) = sech(40(x - 0.5))                                                 %
 %  u(x, 0) = 0                                                                 %
@@ -29,10 +29,10 @@ dx = (b - a) / (m - 1);
 x = [a:dx:b]';
 
 % loop through the time values
-dt = 0.0001;
-timesteps = 2/dt; % make it loop twice
-mu = dt/dx; % for the FD method
-kappa = dt/(2*dx);
+dt = 0.05 * dx;
+timesteps = 1/dt; % go until t = 1
+mu = dt/(2*dx); % for the FD method
+kappa = dt^2/(2*dx^2);
 
 % define the FD matrix 
 A = diag(ones(m-1,1),1) - diag(ones(m-1,1),-1);
@@ -57,13 +57,13 @@ for t = 1:timesteps
     w2 = w2 + C*w2;
 
     W = [w1'; w2'];
-    U = P \ W;
+    U = P' * W;
 
     u = U(1,:)';
     n = U(2,:)';
 
     plot(x,n); % and plot it
-    axis([a,b,0,1])
+    axis([a,b,-1,1])
     drawnow;
 endfor
 input("Press any key to continue.");
