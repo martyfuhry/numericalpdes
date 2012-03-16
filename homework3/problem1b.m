@@ -14,9 +14,7 @@
 % with m=128 grid points and the intial condition                              %
 %  n(x, 0) = sech(40(x - 0.5))                                                 %
 %  u(x, 0) = 0                                                                 %
-% with boundary condtions                                                      %
-%  u(0, t) = 0                                                                 %
-%  n(1, t) = 0                                                                 %
+% with outflow boundary conditions.                                            %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % set up some PDE variables
@@ -53,16 +51,6 @@ w2 = W(2,:)';
 
 % start the FD method
 for t = 1:ceil(timesteps)
-    % set left boundary conditions
-    W = P*[0, n(2)]';
-    w1(1) = W(1);
-    w2(1) = W(2);
-
-    % set right boundary conditions
-    W = P*[u(m+1), 0]';
-    w1(m+2) = W(1);
-    w2(m+2) = W(2);
-
     % peform the FD method over the decoupled equations
     w1 = w1 + ( mu/2*A + mu^2/2*B)*w1;
     w2 = w2 + (-mu/2*A + mu^2/2*B)*w2;

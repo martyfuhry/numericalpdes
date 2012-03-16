@@ -1,6 +1,7 @@
+%%%%%%%%%%%alternate%%%%%%%%%%%%%%%%%%
 % Problem 1 (a)
 % Marty Fuhry
-% 3/15/2011
+% 2/14/2011
 % Compiled and ran using GNU Octave, version 3.2.4 configured for "x86_64-pc-linux-gnu".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -26,52 +27,36 @@ b = 1;
 
 % discretize the grid
 dx = (b - a) / (m - 1);
-x = [a-dx:dx:b+dx]';
-
-% keep the courant number 1 so that there is no dispersion
-dt = dx;
-timesteps = 1/dt; % go until t = 1
-mu = dt/dx;
-
-% define the FD matrices
-A = diag(ones(m+1,1),1) - diag(ones(m+1,1),-1);
-B = diag(ones(m+1,1),1) - 2*diag(ones(m+2,1)) + diag(ones(m+1,1),-1);
-
-% get the change of basis matrix P
-M = [0 1; 1 0];
-[P, L] = eig(M); % note: P is orthonormal because M is symmetric
+x = [a:dx:b]';
 
 % initial conditions
+u = zeros(m,1);
 n = sech(40*(x - 0.5)); 
-u = zeros(m+2,1);
 
-% transform to the eigenbasis
-W = P*[u'; n'];
+% loop through the time values
+dt = dx;
+timesteps = 1/dt; % go until t = 1
+mu = dt/dx; 
 
-w1 = W(1,:)';
-w2 = W(2,:)';
+% define the FD matrices
+A = diag(ones(m-1,1),1) - diag(ones(m-1,1),-1);
+B = diag(ones(m-1,1),1) - 2*diag(ones(m,1)) + diag(ones(m-1,1),-1);
+
+% this is our FD matrix
+%C = -mu/2.*A + mu^2/2.*B;
 
 % start the FD method
-for t = 1:ceil(timesteps)
-    % set left boundary conditions
-    W = P*[0, n(2)]';
-    w1(1) = W(1);
-    w2(1) = W(2);
+for t = 1:timesteps
+    %u(1) = 0;
+    %n(1) = n(2);
+    %u(m) = u(m-1);
+    %n(m) = 0;
+    % perform the FD method
+    u = u + (-mu/2*A + mu^2/2*B)*n;
+    n = n + (-mu/2*A + mu^2/2*B)*u;
 
-    % set right boundary conditions
-    W = P*[u(m+1), 0]';
-    w1(m+2) = W(1);
-    w2(m+2) = W(2);
-
-    % peform the FD method over the decoupled equations
-    w1 = w1 + ( mu/2*A + mu^2/2*B)*w1;
-    w2 = w2 + (-mu/2*A + mu^2/2*B)*w2;
-
-    % transform back to the original basis
-    W = [w1'; w2'];
-    U = P'* W; 
-    u = U(1,:)';
-    n = U(2,:)';
+    %u = unew;
+    %n = nnew;
 
     % plot u and n
     hold on
