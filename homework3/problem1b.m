@@ -15,6 +15,7 @@
 %  n(x, 0) = sech(40(x - 0.5))                                                 %
 %  u(x, 0) = 0                                                                 %
 % with outflow boundary conditions.                                            %
+% Happily enough, outflow worked perfectly right out of the box.               %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % set up some PDE variables

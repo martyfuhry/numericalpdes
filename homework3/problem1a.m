@@ -53,12 +53,12 @@ w2 = W(2,:)';
 
 % start the FD method
 for t = 1:ceil(timesteps)
-    % set left boundary conditions
+    % set left boundary conditions wrt the eigenbasis
     W = P*[0, n(2)]';
     w1(1) = W(1);
     w2(1) = W(2);
 
-    % set right boundary conditions
+    % set right boundary conditions wrt the eigenbasis
     W = P*[u(m+1), 0]';
     w1(m+2) = W(1);
     w2(m+2) = W(2);

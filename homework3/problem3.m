@@ -68,11 +68,11 @@ for k = 1:4
         %%%%%%%%%%%%%%%%%%%%%%%
         % Lax-Friedrichs
         %%%%%%%%%%%%%%%%%%%%%%%
-        %F = [0; f([u_lf(3:m+2)]) - f([u_lf(1:m)]); 0];
-        %A = diag(ones(m+1,1),-1) + diag(ones(m+1,1),1);
-        %A(m+2, m+1) = 2;
+        F = [0; f([u_lf(3:m+2)]) - f([u_lf(1:m)]); 0];
+        A = diag(ones(m+1,1),-1) + diag(ones(m+1,1),1);
+        A(m+2, m+1) = 2; % need to get outflow right.
 
-        %u_lf = 0.5*A*u_lf - 0.5*mu*F;
+        u_lf = 0.5*A*u_lf - 0.5*mu*F;
 
         %%%%%%%%%%%%%%%%%%%%%%%
         % Lax-Wendroff
@@ -81,8 +81,8 @@ for k = 1:4
         F_right = [f(u_lw(2:m+2)) - f(u_lw(1:m+1)); 0];
         A_right = diag(ones(m+2,1)) + diag(ones(m+1,1),1);
         A_left  = diag(ones(m+2,1)) + diag(ones(m+1,1),-1);
-        A_left(1,1)      = 2;
-        A_right(m+2,m+2) = 2;
+        A_left(1,1)      = 2; % need to get outflow right.
+        A_right(m+2,m+2) = 2; % need to get outflow right.
         ustar_left  = 0.5*A_left *u_lw - 0.5*mu*F_left;
         ustar_right = 0.5*A_right*u_lw - 0.5*mu*F_right;
 
@@ -93,7 +93,9 @@ for k = 1:4
         % Godunov
         %%%%%%%%%%%%%%%%%%%%%%%
 
-        plot(x,u_lw, 'r'); 
+        hold on
+        plot(x,u_lf, 'b.-');
+        plot(x,u_lw, 'r-'); 
         axis([a,b,-1.5,1.5])
         drawnow
         clf;
