@@ -43,13 +43,13 @@ endfunction
 % set up some PDE variables
 m = 100;
 a = -1;
-b = 1;
+b = 10;
 
 % discretize the grid
 dx = (b - a) / (m - 1);
 x = [a:dx:b]';
 dt = 0.5*dx;
-timesteps = 1/dt; 
+timesteps = (b-a)/dt; 
 mu = dt/dx;
 
 % initial conditions
@@ -215,6 +215,15 @@ for t = 1:timesteps
     plot(x, uvanleer, 'g.-'); 
     plot(x, uupwind, 'c.-'); 
     plot(x, uexact, 'k.-'); 
+    legend("minmod", "superbee", "van leer", "upwind", "exact");
+    if t == 10
+        print "-S640,480" prob4-1.png
+    elseif t == timesteps/3
+        print "-S640,480" prob4-2.png
+    elseif t == timesteps/2
+        print "-S640,480" prob4-3.png
+    endif
+    %savefig("fig%i.png", t);
     axis([a,b,u_r-0.1,u_l+0.1])
     drawnow
     clf;

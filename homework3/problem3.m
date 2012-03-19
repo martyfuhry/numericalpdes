@@ -7,11 +7,8 @@
 % Write a finite volume code for Burgers equation                              %
 %  u_t + u u_x = 0                                                             %
 % and compare the performance of Lax-Friedrichs                                %
-%                                                                              %
 % Lax-Wendroff                                                                 %
-%                                                                              %
 % and Godunov                                                                  %
-%                                                                              %
 % schemes for the fluxes.                                                      %
 % Solve the Riemann problem (u_l, u_r) =                                       %
 %  (0,1), (1,0), (-1,1), and (1,-1).                                           %
