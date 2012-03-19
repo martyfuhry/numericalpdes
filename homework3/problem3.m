@@ -131,9 +131,21 @@ for k = 1:4
         hold on
         plot(x,u_lf, 'b.-');
         plot(x,u_lw, 'r-'); 
-        plot(x,u_g, '--'); 
+        plot(x,u_g, 'g--'); 
+        legend("Lax-Friedrich", "Lax-Wendroff", "Godunov")
         axis([a,b,-1.5,1.5])
         drawnow
+        if t == ceil(timesteps/2)
+            if k == 1
+                print "-S640,480" prob3-k1.png
+            elseif k == 2
+                print "-S640,480" prob3-k2.png
+            elseif k == 3
+                print "-S640,480" prob3-k3.png
+            elseif k == 4
+                print "-S640,480" prob3-k4.png
+            endif
+        endif
         clf;
     endfor
     input("Press any key to continue.");

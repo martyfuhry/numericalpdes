@@ -77,8 +77,18 @@ for t = 1:ceil(timesteps)
     hold on
     plot(x,u, 'r'); 
     plot(x,n, 'b'); 
+    legend("u", "n")
     axis([a,b,-1,1])
     drawnow;
+    if t == 10
+        print "-S640,480" prob1-1.png
+    elseif t == ceil(timesteps/3)
+        print "-S640,480" prob1-2.png
+    elseif t == ceil(timesteps/2)
+        print "-S640,480" prob1-3.png
+    elseif t == ceil(timesteps)
+        print "-S640,480" prob1-4.png
+    endif
     clf;
 endfor
 input("Press any key to continue.");

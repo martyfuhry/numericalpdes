@@ -216,6 +216,8 @@ for t = 1:timesteps
     plot(x, uupwind, 'c.-'); 
     plot(x, uexact, 'k.-'); 
     legend("minmod", "superbee", "van leer", "upwind", "exact");
+    axis([a,b,u_r-0.1,u_l+0.1])
+    drawnow
     if t == 10
         print "-S640,480" prob4-1.png
     elseif t == timesteps/3
@@ -223,9 +225,6 @@ for t = 1:timesteps
     elseif t == timesteps/2
         print "-S640,480" prob4-3.png
     endif
-    %savefig("fig%i.png", t);
-    axis([a,b,u_r-0.1,u_l+0.1])
-    drawnow
     clf;
 endfor
 input("Press any key to continue.");

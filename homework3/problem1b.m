@@ -1,4 +1,4 @@
-% Problem 1 (a)
+% Problem 1 (b)
 % Marty Fuhry
 % 3/15/2011
 % Compiled and ran using GNU Octave, version 3.2.4 configured for "x86_64-pc-linux-gnu".
@@ -66,8 +66,18 @@ for t = 1:ceil(timesteps)
     hold on
     plot(x,u, 'r'); 
     plot(x,n, 'b'); 
+    legend("u", "n")
     axis([a,b,-1,1])
     drawnow;
+    if t == 10
+        print "-S640,480" prob1b-1.png
+    elseif t == ceil(timesteps/3)
+        print "-S640,480" prob1b-2.png
+    elseif t == ceil(timesteps/2)
+        print "-S640,480" prob1b-3.png
+    elseif t == ceil(timesteps)
+        print "-S640,480" prob1b-4.png
+    endif
     clf;
 endfor
 input("Press any key to continue.");
