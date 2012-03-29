@@ -34,25 +34,26 @@ uprev = u;
 u = u - mu*A*u;
 
 % exact second time step
-u = sech(10.*((x - a*dt) - pi));
+%u = sech(10.*((x - a*dt) - pi));
 
+% for octave's stupid fourier coefficient indexing
 k1 = [0:m/2]';
 k2 = [-m/2 + 1: -1]';
-
 k = [k1; k2];
-
 
 for t = 1:timesteps
     % store our previous time step
     utemp = u;
 
-    % time differencing
-    u     = uprev - 2*a*dt*ifft(i*k.*fft(u));
+    % leapfrog time differencing
+    u = uprev - 2*a*dt*ifft(i*k.*fft(u));
+
+    % use the previous time step next time
     uprev = utemp;
     
     % plot it
     plot(x,u);
-    axis([0, 2*pi, -10, 10])
+    axis([0, 2*pi, -1, 1])
     drawnow;
 endfor
 
