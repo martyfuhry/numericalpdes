@@ -31,7 +31,7 @@ for j = 2:m+2
     K(j-1: j, j-1: j) += [1 -1; -1 1];
 endfor
 
-% boundary conditions
+% for the boundary conditions
 K(m+2,m+1) = 0;
 K(1,2) = 0;
 
