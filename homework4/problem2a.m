@@ -13,4 +13,29 @@
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+m = 12;
+dx = 2*pi/m;
+kmax = m/2;
+
+x = [dx:dx:2*pi]';
+
+u = cos(kmax * x);
+
+% for octave's stupid fourier coefficient indexing
+k1 = [0:m/2]';
+k2 = [-m/2 + 1: -1]';
+k = [k1; k2];
+
+uprimeexact = kmax * (-sin(kmax * x));
+uprimeps = ifft(i*k.*fft(u))
+
+
+%ifft(i*k.*fft(u))
+%hold on
+%plot(x, uprimeexact, 'b-')
+%plot(x,uprimeps, 'r*')
+
+%drawnow
+
+%input("Press any key to continue.");
 

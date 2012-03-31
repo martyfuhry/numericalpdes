@@ -37,7 +37,7 @@ u = u - mu*A*u;
 %u = sech(10.*((x - a*dt) - pi));
 
 % for octave's stupid fourier coefficient indexing
-k1 = [0:m/2]';
+k1 = [0:m/2-1, 0]';
 k2 = [-m/2 + 1: -1]';
 k = [k1; k2];
 

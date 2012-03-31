@@ -32,12 +32,14 @@ endfor
 % boundary conditions
 K(m+2,m+1) = 0;
 K(1,2) = 0;
+K
 
 % build the load vector
 F = [f(x)];
 for j = 3:m+1
     L(j-1:j) += h/6. * [2*F(j-1) + F(j); F(j-1) + 2*F(j)];
 endfor
+L
 
 % solve the steady state system
 C = K \ L;
