@@ -26,8 +26,11 @@ pprime = polyderiv(p);
 yprime = polyval(pprime, x);
 
 hold on
-plot(x, uprime)
-plot(x, yprime)
+plot(x, uprime, "r-.")
+plot(x, yprime, "b-*")
+title("Problem 1 (b)")
+legend("Exact", "Polynomial Interpolation with Chebyshev Points")
+print("problem1b.png")
 drawnow
 
 input("Press any key to continue.");

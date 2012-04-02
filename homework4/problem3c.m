@@ -53,7 +53,18 @@ for t = 1:timesteps
     % plot it
     plot(x,u);
     axis([0, 2*pi, -1, 1])
+    legend("Pseudo-Spectral Method Approximation");
     drawnow;
+    if t == 1
+        title("Problem 3 (c): t = 0");
+        print("problem3c1.png");
+    elseif t == ceil(timesteps/2)
+        title("Problem 3 (c): t = pi");
+        print("problem3c2.png");
+    elseif t == floor(timesteps)
+        title("Problem 3 (c): t = 2*pi");
+        print("problem3c3.png");
+    endif
 endfor
 
 input("Press any key to continue.");

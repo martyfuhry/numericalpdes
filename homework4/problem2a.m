@@ -27,7 +27,7 @@ k2 = [-m/2 + 1: -1]';
 k = [k1; k2];
 
 uprimeexact = kmax * (-sin(kmax * x));
-uprimeps = ifft(i*k.*fft(u))
+uprimeps = ifft(-k.^2.*fft(u))
 
 
 %ifft(i*k.*fft(u))

@@ -47,9 +47,6 @@ for t = 1:timesteps
     utemp = u;
 
     % crank-nicolson time differencing
-    %u = uprev + kappa * dt * (uxxprev + uxxH
-    %u = ifft(uprev - 2*alpha*dt*ifft(i*k.*fft(u)).*(fft((1. - kappa*dt*k.^2.).*uprev))./(1 + kappa*k.^2*dt));
-    %u = ifft(fft((1 - i*k*dt*alpha - k.^2*dt*kappa).*uprev)./(1 + i*k*dt*alpha + k.^2*dt*kappa));
     u = ifft(((1. - i*k*dt*alpha - kappa*dt*k.^2.))./(1 + i*k*dt*alpha + kappa*k.^2*dt).*fft(uprev));
 
     % use the previous time step next time
@@ -59,6 +56,18 @@ for t = 1:timesteps
     plot(x,u);
     axis([0, 2*pi, -1, 1])
     drawnow;
+    legend("Pseudo-Spectral Method Approximation");
+    if t == 1
+        title("Problem 3 (d): t = 0");
+        print("problem3d1.png");
+    elseif t == ceil(timesteps/2)
+        title("Problem 3 (d): t = pi");
+        print("problem3d2.png");
+    elseif t == floor(timesteps)
+        title("Problem 3 (d): t = 2*pi");
+        print("problem3d3.png");
+    endif
+ 
 endfor
 
 input("Press any key to continue.");

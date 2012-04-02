@@ -21,30 +21,36 @@ L = zeros(m+2,1);
 
 % define the basis function over the canonical element
 function [feval] = f(x)
-    feval = exp(-10.*x);
+    feval = -exp(-10.*x);
 endfunction
 
 % build the element stiffness matrix
 for j = 2:m+2
-    K(j-1: j, j-1: j) += [1 -1; -1 1];
+    K(j-1: j, j-1: j) += 1/h * [1 -1; -1 1];
 endfor
-
-% boundary conditions
-K(m+2,m+1) = 0;
-K(1,2) = 0;
-K
 
 % build the load vector
 F = [f(x)];
-for j = 3:m+1
+for j = 2:m+1
     L(j-1:j) += h/6. * [2*F(j-1) + F(j); F(j-1) + 2*F(j)];
 endfor
-L
+
+% boundary conditions
+K(m+2,m+2) = 1;
+K(m+2,m+1) = 0;
+K(1,2) = 0;
+K(1,1) = 1;
+L(1) = 0;
 
 % solve the steady state system
 C = K \ L;
 
 % and plot
 plot(x,C);
+
+legend("Finite Element Approximation");
+title("Problem 4 (a)");
+print("problem4a.png");
+
 drawnow
 input("Press any key to continue.")

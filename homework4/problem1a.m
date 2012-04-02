@@ -26,8 +26,12 @@ pprime = polyderiv(p);
 yprime = polyval(pprime, x);
 
 hold on
-plot(x, uprime)
-plot(x, yprime)
+plot(x, uprime, "r-.")
+plot(x, yprime, "b-*")
+printf("Error = %f\n", norm(uprime - yprime, inf));
+title("Problem 1 (a)")
+legend("Exact", "Polynomial Interpolation")
+print("problem1a.png")
 drawnow
 
 input("Press any key to continue.");

@@ -27,11 +27,12 @@ p2 = polyfit(x2, u2, m);
 y2 = polyval(p2, x);
 
 hold on
-plot(x, u, 'g-*')
-plot(x, y1, 'r')
-plot(x, y2, 'b')
+plot(x, u, 'r-.')
+plot(x, y1, 'b-*')
+plot(x, y2, 'k-x')
 
 legend("Exact", "Uniform", "cos(j*pi/m)");
+print("problem1b.png")
 drawnow
 
 input("Press any key to continue.");

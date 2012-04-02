@@ -29,24 +29,28 @@ for j = 2:m+2
     K(j-1: j, j-1: j) += 1/h * [1 -1; -1 1];
 endfor
 
+% build the load vector
+F = [f(x)];
+for j = 2:m+2
+    L(j-1:j) += h/6. * [2*F(j-1) + F(j); F(j-1) + 2*F(j)];
+endfor
+
 % boundary conditions
 K(1,2) = 0;
 K(1,1) = 1;
 K(m+2,m+2) = 2/h;
-
-% build the load vector
-F = [f(x)];
-for j = 3:m+1
-    L(j-1:j) += h/6. * [2*F(j-1) + F(j); F(j-1) + 2*F(j)];
-endfor
-
+L(1) = 0;
 L(m+2) -= 0.02;
 
 % solve the steady state system
-K
 C = K \ L;
 
 % and plot
 plot(x,C);
 drawnow;
+
+legend("Finite Element Approximation");
+title("Problem 4 (c)");
+print("problem4c.png");
+
 input("Press any key to continue.");
