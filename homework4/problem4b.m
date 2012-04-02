@@ -23,17 +23,19 @@ L = zeros(m+2,1);
 
 % define the basis function over the canonical element
 function [feval] = f(x)
-    feval = exp(-10.*x);
+    feval = -exp(-10.*x);
 endfunction
 
 % build the element stiffness matrix
 for j = 2:m+2
-    K(j-1: j, j-1: j) += [1 -1; -1 1];
+    K(j-1: j, j-1: j) += 1/h * [1 -1; -1 1];
 endfor
 
 % for the boundary conditions
 K(m+2,m+1) = 0;
+K(m+2,m+2) = 1;
 K(1,2) = 0;
+K(1,1) = 1;
 
 % build the load vector
 F = [f(x)];
@@ -46,5 +48,5 @@ C = K \ L;
 
 % and plot
 plot(x,C);
-drawnow
-input("Press any key to continue.")
+drawnow;
+input("Press any key to continue.");

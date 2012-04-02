@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Write a finite element code to solve the one-dimensional boundary value      %
 % problem for u(x) on 0 < x < 1                                                %
-%  u''(x) = e^(-10x), u(0) = 0, u(1) = 0.                                      %
+%  u''(x) = e^(-10x), u(0) = 0, u'(1) = 0.02                                   %
 % Use tent functions on 10 uniformly spaced elements.                          %
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -21,17 +21,18 @@ L = zeros(m+2,1);
 
 % define the basis function over the canonical element
 function [feval] = f(x)
-    feval = exp(-10.*x);
+    feval = -exp(-10.*x);
 endfunction
 
 % build the element stiffness matrix
 for j = 2:m+2
-    K(j-1: j, j-1: j) += [1 -1; -1 1];
+    K(j-1: j, j-1: j) += 1/h * [1 -1; -1 1];
 endfor
 
 % boundary conditions
 K(1,2) = 0;
-K
+K(1,1) = 1;
+K(m+2,m+2) = 2/h;
 
 % build the load vector
 F = [f(x)];
@@ -42,9 +43,10 @@ endfor
 L(m+2) -= 0.02;
 
 % solve the steady state system
+K
 C = K \ L;
 
 % and plot
 plot(x,C);
-drawnow
-input("Press any key to continue.")
+drawnow;
+input("Press any key to continue.");
