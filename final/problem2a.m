@@ -14,36 +14,39 @@ a = -20;
 b = 20;
 timesteps = 1000;
 
-dx = (b - a) / (m - 1);    % space discretization
-dt = 0.9*dx;
-x  = [a:dx:b]';      % grid
-
-k1 = [0:m/2-1, 0]';
+k1 = [0:m/2]';
 k2 = [-m/2 + 1: -1]';
 k = [k1; k2];
 
-U = exp(-x.^2);
-A = diag(ones(m-1,1),-1) - diag(ones(m-1,1),1);
-A(1,m) = 1;
-A(m,1) = -1;
+dx = (b - a) / (m - 1);    % space discretization
+dt = dx/(m^4/16); % not right either
+x  = [a:dx:b]';      % grid
 
+U = exp(-x.^2);
+A = -diag(ones(m-1,1),-1) + diag(ones(m-1,1),1);
+A(1,m) = -1;
+A(m,1) = 1;
+
+A *= 1/(4 * dx);
 
 for t = 1:timesteps        % loop through the timesteps
     % RK4 time differencing
-    Unonlinear = A/(4*dx) * (U.^2);
-    k1 = dt * ifft(-i*k.*fft(Unonlinear) + (k.^2 - k.^4).*fft(U));
-    Ustar = U + 0.5*k1;
-    k2 = dt * ifft((k.^2 - k.^4).*fft(Ustar));
-    Ustar = U + 0.5*k2;
-    k3 = dt * ifft((k.^2 - k.^4).*fft(Ustar));
-    Ustar = U + k3;
-    k4 = dt * ifft((k.^2 - k.^4).*fft(Ustar));
+
+    % this is constant speed advection
+    %k1 = dt * ifft((-i*k + k.^2 - k.^4).*fft(U));
+    %k2 = dt * ifft((-i*k + k.^2 - k.^4).*fft(U + 0.5*k1));
+    %k3 = dt * ifft((-i*k + k.^2 - k.^4).*fft(U + 0.5*k2));
+    %k4 = dt * ifft((-i*k + k.^2 - k.^4).*fft(U + k3));
+
+    % this works correctly
+    k1 = dt* (-A * (U.^2))            + dt * ifft((k.^2 - k.^4).*fft(U));
+    k2 = dt* (-A * ((U + 0.5k1).^2)) + dt * ifft((k.^2 - k.^4).*fft(U + 0.5*k1));
+    k3 = dt* (-A * ((U + 0.5*k2).^2)) + dt * ifft((k.^2 - k.^4).*fft(U + 0.5*k2));
+    k4 = dt* (-A * ((U + 1.0*k3).^2)) + dt * ifft((k.^2 - k.^4).*fft(U + 1.0*k3));
 
     % compute the result for this time step
     U += 1/6 * (k1 + 2*k2 + 2*k3 + k4);
-    U
     plot(x,U);             % plot the result
-    axis([a,b,0,1])
+    axis([a,b,-1,1]);
     drawnow;
 endfor
-input("Press any key to continue.")
