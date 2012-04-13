@@ -1,4 +1,4 @@
-% Problem 2 (a)
+% Problem 2 (c)
 % Marty Fuhry
 % 4/11/2011
 % Compiled and ran using GNU Octave, version 3.2.4 configured for "x86_64-pc-linux-gnu".
@@ -20,7 +20,9 @@ k = [k1; k2];
 
 dx = (b - a) / (m - 1);    % space discretization
 kmax = m/2;
-dt = 2.5 / (sqrt(kmax^2 + kmax^4 - 2*kmax^6 + kmax^8));
+dt = 2.5 / (sqrt(kmax^2 + kmax^4));
+dt = 2.5 / kmax^2;
+
 x  = [a:dx:b]';      % grid
 
 U = exp(-x.^2);
@@ -32,21 +34,17 @@ A *= 1/(4 * dx);
 
 for t = 1:ceil(50/dt)
     % RK4 time differencing
+    q1 = dt * (-A * (U.^2))            + dt * ifft((k.^2).*fft(U));
+    q2 = dt * (-A * ((U + 0.5*q1).^2)) + dt * ifft((k.^2).*fft(U + 0.5*q1));
+    q3 = dt * (-A * ((U + 0.5*q2).^2)) + dt * ifft((k.^2).*fft(U + 0.5*q2));
+    q4 = dt * (-A * ((U + 1.0*q3).^2)) + dt * ifft((k.^2).*fft(U + 1.0*q3));
 
-    % this is constant speed advection
-    %q1 = dt * ifft((-i*k + k.^2 - k.^4).*fft(U));
-    %q2 = dt * ifft((-i*k + k.^2 - k.^4).*fft(U + 0.5*q1));
-    %q3 = dt * ifft((-i*k + k.^2 - k.^4).*fft(U + 0.5*q2));
-    %q4 = dt * ifft((-i*k + k.^2 - k.^4).*fft(U + 1.0*q3));
+    % compute the result for the first time splitting method
+    Ustar = U + 1/6 * (q1 + 2*q2 + 2*q3 + q4);
 
-    % this works correctly
-    q1 = dt * (-A * (U.^2))            + dt * ifft((k.^2 - k.^4).*fft(U));
-    q2 = dt * (-A * ((U + 0.5*q1).^2)) + dt * ifft((k.^2 - k.^4).*fft(U + 0.5*q1));
-    q3 = dt * (-A * ((U + 0.5*q2).^2)) + dt * ifft((k.^2 - k.^4).*fft(U + 0.5*q2));
-    q4 = dt * (-A * ((U + 1.0*q3).^2)) + dt * ifft((k.^2 - k.^4).*fft(U + 1.0*q3));
+    % backward euler
+    U = ifft(1./(1+dt*k.^4).*fft(Ustar));
 
-    % compute the result for this time step
-    U += 1/6 * (q1 + 2*q2 + 2*q3 + q4);
     plot(x,U);             % plot the result
     axis([a,b,-1,1]);
     drawnow;
