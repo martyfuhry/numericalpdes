@@ -1,9 +1,15 @@
 % Problem 2 (b)
 % Marty Fuhry
-% 4/11/2011
+% 4/11/2012
 % Compiled and ran using GNU Octave, version 3.2.4 configured for "x86_64-pc-linux-gnu".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Solve the problem                                                            %
+%  u_t + u u_x = -u_xx - u_xxxx                                                %
+% over the domain [-20,20] with Runge-Kutta 4 in time and a pseudo-spectral    %
+% space discretization.                                                        %
+% Discretize the nonlinear term by approximating the x-derivative of u^2/2.    %
+% Use m = 128 and choose dt as large as possible.                              %
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

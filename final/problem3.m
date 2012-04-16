@@ -1,9 +1,15 @@
 % Problem 3 
 % Marty Fuhry
-% 4/15/2011
+% 4/15/2012
 % Compiled and ran using GNU Octave, version 3.2.4 configured for "x86_64-pc-linux-gnu".
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Design & implement a finite element method to solve                          %
+%  u_t = (kappa u_x)_x, u(0) = 1, u(1) = 1                                     %
+% where                                                                        %
+%  kappa(x) = 0.1 + 0.5(1 + tanh(6x - 3)                                       %
+% and                                                                          %
+%  u(x,0) = sech(200x - 100).                                                  %
 %                                                                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -48,9 +54,6 @@ for j = 3:2*m+3
                                                7/60 , -11/15, 37/60];
 endfor
 
-%K(2,2:4) += h * [1/15 - 1/30, 8/15 + 1/15, 1/15 + 2/15];
-%K(2,2:4) -= k(1) * [7/60, -1/15, -1/20] - k(2) ;
-
 % build the other matrix 
 %   M_i,j = (phi_i, phi_j)
 for j = 3:2*m+3
@@ -59,7 +62,6 @@ for j = 3:2*m+3
                              -1/30, 1/15, 2/15;]; 
 endfor
 
-M(2,2:4) += h * [1/15 - 1/30, 8/15 + 1/15, 1/15 + 2/15];
 
 % initial conditions
 C = sech(200*x - 100);
@@ -94,5 +96,5 @@ for t = 0:0.001/dt
     axis([a,b,0,1]);
     drawnow
 endfor
-print("problem3.png")
+%print("problem3.png")
 input("Press any key to continue.");
