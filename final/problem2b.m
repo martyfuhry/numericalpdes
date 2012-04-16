@@ -1,4 +1,4 @@
-% Problem 2 (c)
+% Problem 2 (b)
 % Marty Fuhry
 % 4/11/2011
 % Compiled and ran using GNU Octave, version 3.2.4 configured for "x86_64-pc-linux-gnu".
@@ -18,9 +18,8 @@ k2 = [-m/2 + 1: -1]';
 k = [k1; k2];
 
 dx = (b - a) / (m - 1);    % space discretization
-kmax = m/2;
-dt = 0.24;
-
+kmax = 2*pi/40 * m/2;
+dt = 2.5 / (sqrt(kmax^2 + kmax^4 - 2*kmax^6 + kmax^8));
 x  = [a:dx:b]';      % grid
 
 U = exp(-x.^2);
@@ -29,29 +28,36 @@ A(1,m) = -1;
 A(m,1) = 1;
 
 A *= 1/(4 * dx);
+A = sparse(A);
 
+dt
 K = (2*pi/40)^2 * k.^2 - (2*pi/40)^4 * k.^4;
 
 for t = 1:ceil(50/dt)
+
     % RK4 time differencing
-    q1 = -dt * A * (U.^2);
-    q2 = -dt * A * ((U + 0.5*q1).^2);
-    q3 = -dt * A * ((U + 0.5*q2).^2);
-    q4 = -dt * A * ((U + 1.0*q3).^2);
+    q1 = dt * (-A*(U.^2) + real(ifft(K.*fft(U))));
+    q2 = dt * (-A*((U + 0.5*q1).^2) + real(ifft(K.*fft(U + 0.5*q1))));
+    q3 = dt * (-A*((U + 0.5*q2).^2) + real(ifft(K.*fft(U + 0.5*q2))));
+    q4 = dt * (-A*((U + 1.0*q3).^2) + real(ifft(K.*fft(U + 1.0*q3))));
 
-    % compute the result for the first time splitting method
-    Ustar = U + 1/6 * (q1 + 2*q2 + 2*q3 + q4);
-
-    % trapezoidal
-    U = real(ifft((1 + dt/2*K)./(1 - dt/2*K).*fft(Ustar)));
+    % compute the result for this time step
+    U += 1/6 * (q1 + 2*q2 + 2*q3 + q4);
+    if (mod(t,100) == 0)
         plot(x,U);             % plot the result
-        axis([a,b,-5,10]);
-        title("Problem 2 (c), t = 50");
+        t*dt
+        title("Problem 2 (b), t = 50");
         legend("Pseudo-Spectral Method Approximation");
-        %print("problem2c.png");
+        axis([a,b,-5,10]);
         drawnow;
-    t*dt
-
+    endif
 endfor
 
-input("Press any key to continue.");
+plot(x,U);             % plot the result
+title("Problem 2 (b), t = 50");
+legend("Pseudo-Spectral Method Approximation");
+axis([a,b,-5,10]);
+print("problem2b.png");
+drawnow;
+
+
